@@ -1,0 +1,33 @@
+{
+	"name": "@sittuyin/server",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"main": "build/index.js",
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"scripts": {
+		"dev": "tsx watch src/index.ts",
+		"start": "node build/index.js",
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@colyseus/schema": "^5.0.50",
+		"@colyseus/tools": "^0.18.11",
+		"@sittuyin/engine": "workspace:*",
+		"@sittuyin/shared": "workspace:*",
+		"colyseus": "^0.18.12",
+		"express": "^5.2.1"
+	},
+	"devDependencies": {
+		"@colyseus/sdk": "^0.18.10",
+		"@colyseus/testing": "^0.18.5",
+		"@types/express": "^5.0.6",
+		"@types/node": "^22.10.2",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.2"
+	}
+}

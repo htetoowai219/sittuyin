@@ -1,0 +1,12 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+blockExoticSubdeps: false
+
+allowBuilds:
+  esbuild: true
+  lightningcss: true
+  msgpackr-extract: false
+  sharp: true
+  workerd: true

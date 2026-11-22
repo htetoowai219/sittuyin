@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.output/
+.turbo/
+.wrangler/
+.nitro/
+.vinxi/
+*.tsbuildinfo
+
+# Generated routes & test artifacts
+routeTree.gen.ts
+coverage/
+test-results/
+playwright-report/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+*.log

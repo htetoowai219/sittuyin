@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "skills": {
+    "architect": {
+      "source": "htetoowai219/how-skills",
+      "commit": "c70f7dba74f376ab6e0c91b7a27232f4a4d3a992",
+      "sourceType": "github",
+      "skillPath": "skills/architect/SKILL.md",
+      "computedHash": "26837cac30a66b114a19a11842fa489016fb33b49bb36ff49b95be60136e0271"
+    },
+    "better-auth-best-practices": {
+      "source": "better-auth/skills",
+      "commit": "20c9e88a5c007461a703f1c213572b073196113e",
+      "sourceType": "github",
+      "skillPath": "better-auth/best-practices/SKILL.md",
+      "computedHash": "2773c3687f2cf96d659049ebf2d8c86058a33541b09360712df0dc6b1404c403"
+    },
+    "cloudflare": {
+      "source": "cloudflare/skills",
+      "commit": "5108325ecceabc899c761e07aa617b09c02445ee",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare/SKILL.md",
+      "computedHash": "a40c5c77e4b96b0f6603a54e67bf2ff401a872366af48ff8f6ae0e872d4ad324"
+    },
+    "colyseus": {
+      "source": "colyseus/skill",
+      "commit": "9e3ce1326a057f7f1edb71330e1cbb731b9e9536",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "241e3318437d42ab6ee8faeedf4c03dee323e327892fc4f7a4c543858c6d76ea"
+    },
+    "develop": {
+      "source": "htetoowai219/how-skills",
+      "commit": "c70f7dba74f376ab6e0c91b7a27232f4a4d3a992",
+      "sourceType": "github",
+      "skillPath": "skills/develop/SKILL.md",
+      "computedHash": "83b668adff76d2f1a1ea29d348f20723fa5192cd37d21d1ddf6ebb8cbc75dc7b"
+    },
+    "neon-drizzle": {
+      "source": "neondatabase/ai-rules",
+      "commit": "1ceaf89a4e0acfbaf152ac2e85d45afd55f49c0f",
+      "sourceType": "github",
+      "skillPath": "neon-plugin/skills/neon-drizzle/SKILL.md",
+      "computedHash": "de8b157bf296904d6ad5ce956a208b8d22ad37f03f178ee1e37973a545b9d5a8"
+    },
+    "neon-postgres": {
+      "source": "neondatabase/agent-skills",
+      "commit": "d3601d9e1f9398b96a1ee25047bafba5f04199eb",
+      "sourceType": "github",
+      "skillPath": "skills/neon-postgres/SKILL.md",
+      "computedHash": "0e1db49f25e9208cb24fa2084a542d52d60a85c09271b915acc3dad6901de6a0"
+    },
+    "playwright-best-practices": {
+      "source": "currents-dev/playwright-best-practices-skill",
+      "commit": "0b75b5835a87de1fdd202ba965f3bc5a27738fdf",
+      "sourceType": "github",
+      "skillPath": "playwright-best-practices/SKILL.md",
+      "computedHash": "111e9d3e9d63dea34814120fb6583c0b28ee45371662801d8e8d8bdf4b05dcb0"
+    },
+    "readme-writer": {
+      "source": "htetoowai219/how-skills",
+      "commit": "c70f7dba74f376ab6e0c91b7a27232f4a4d3a992",
+      "sourceType": "github",
+      "skillPath": "skills/readme-writer/SKILL.md",
+      "computedHash": "4403fb665584cf7b1fcb7d60b653344e93ecc0f69c22d1b2ca495600a7e3d724"
+    },
+    "sentry-sdk-setup": {
+      "source": "getsentry/sentry-for-ai",
+      "commit": "149b144b2ba2ad2987ac637a811d82e48c0b2560",
+      "sourceType": "github",
+      "skillPath": "skills-legacy/sentry-sdk-setup/SKILL.md",
+      "computedHash": "8f8e683976b5a99efaf9c0b11715013319e2ef2b9694ae5d6c517ae2ceedbc41"
+    },
+    "sentry-tanstack-start-sdk": {
+      "source": "getsentry/sentry-for-ai",
+      "commit": "149b144b2ba2ad2987ac637a811d82e48c0b2560",
+      "sourceType": "github",
+      "skillPath": "skills-legacy/sentry-tanstack-start-sdk/SKILL.md",
+      "computedHash": "7a4a6baf8349936545957582e02d3112ef1bb58a0ccd925e1290449a3c411093"
+    },
+    "shadcn": {
+      "source": "shadcn-ui/ui",
+      "commit": "bfa64ff4d1cb7317d2403ecb176df6826d4caffc",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "388962d16c7a4f13aaeee0d8f128e50a87df8553d42ef7988c39c0e1c74a40e8"
+    },
+    "tailwind-4-docs": {
+      "source": "Lombiq/Tailwind-Agent-Skills",
+      "commit": "634ec184c36e495fae1d8cf7975df7e6969e3a89",
+      "sourceType": "github",
+      "skillPath": "skills/tailwind-4-docs/SKILL.md",
+      "computedHash": "263961b82698e3defdb26dd6a1b7328044517e67a3bbe91c1b33bb2a4273f4ee"
+    },
+    "tanstack-start-best-practices": {
+      "source": "DeckardGer/tanstack-agent-skills",
+      "commit": "b2fc14c974b2ca09b38de09c28237f240175205b",
+      "sourceType": "github",
+      "skillPath": "skills/tanstack-start/SKILL.md",
+      "computedHash": "d9827c80844a520af294229cc2051154ab6ad2ef3968a597e860330cf36117d2"
+    },
+    "turborepo": {
+      "source": "vercel/turborepo",
+      "commit": "b911d19d45f60c96cb33c756b6e238ad4d32bb73",
+      "sourceType": "github",
+      "skillPath": "skills/turborepo/SKILL.md",
+      "computedHash": "49bb6427015253ce5d93f15dfa6c9ade3f8528f0fbe54769b6da1e1458f058d4"
+    },
+    "vitest": {
+      "source": "antfu/skills",
+      "commit": "4a6bb39e7b45e26402eb215393c51ccf5df1ca4c",
+      "sourceType": "github",
+      "skillPath": "skills/vitest/SKILL.md",
+      "computedHash": "bd95e41d66d76da9008893c9bc48c30f0a68f352cd2b00017767f5e4c129501d"
+    }
+  }
+}
