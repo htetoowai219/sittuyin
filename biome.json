@@ -7,7 +7,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!.agents", "!skills-lock.json", "!**/routeTree.gen.ts"]
+		"includes": [
+			"**",
+			"!.agents",
+			"!skills-lock.json",
+			"!**/routeTree.gen.ts",
+			"!**/src/paraglide",
+			"!apps/web/src/components/ui"
+		]
 	},
 	"formatter": {
 		"enabled": true,

@@ -1,15 +1,239 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-* {
-	box-sizing: border-box;
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="dark"] {
+	color-scheme: dark;
+
+	/* Warm Myanmar dark lacquer & teak design tokens */
+	--bg-table: #16100c;
+	--bg-surface: #231913;
+	--bg-surface-elevated: #2f221a;
+	--border-subtle: #423024;
+	--text-primary: #f6efe2;
+	--text-muted: #bda992;
+
+	/* Board & piece palette */
+	--board-teak-light: #cfa065;
+	--board-teak-base: #bc874b;
+	--board-teak-frame: #4a2d18;
+	--board-grid-line: #6a4322;
+	--board-sit-ke-myin: #e6b85c;
+	--piece-red-fill: #b5231d;
+	--piece-red-accent: #f2c96b;
+	--piece-black-fill: #1e1a17;
+	--piece-black-accent: #f3e7d1;
+
+	/* Game highlights & clock alerts */
+	--highlight-last-move: rgba(218, 165, 58, 0.34);
+	--highlight-check: #dc2626;
+	--highlight-legal: rgba(28, 19, 13, 0.42);
+	--highlight-promote: #eab308;
+	--clock-low: #d97706;
+	--clock-critical: #dc2626;
+
+	/* shadcn/ui semantic mapping */
+	--background: var(--bg-table);
+	--foreground: var(--text-primary);
+	--card: var(--bg-surface);
+	--card-foreground: var(--text-primary);
+	--popover: var(--bg-surface);
+	--popover-foreground: var(--text-primary);
+	--primary: var(--piece-red-fill);
+	--primary-foreground: #fdf6ec;
+	--secondary: var(--bg-surface-elevated);
+	--secondary-foreground: var(--text-primary);
+	--muted: var(--bg-surface-elevated);
+	--muted-foreground: var(--text-muted);
+	--accent: var(--bg-surface-elevated);
+	--accent-foreground: var(--piece-red-accent);
+	--destructive: #dc2626;
+	--destructive-foreground: #fef2f2;
+	--border: var(--border-subtle);
+	--input: var(--border-subtle);
+	--ring: var(--board-sit-ke-myin);
+	--radius: 0.75rem;
 }
 
-html,
-body,
-#app {
-	min-height: 100%;
+[data-theme="light"] {
+	color-scheme: light;
+
+	/* Daylight Shan parchment & teak design tokens */
+	--bg-table: #f4ede0;
+	--bg-surface: #fbf7ee;
+	--bg-surface-elevated: #efe5d3;
+	--border-subtle: #d7c4a5;
+	--text-primary: #231710;
+	--text-muted: #6b5542;
+
+	/* Board & piece palette */
+	--board-teak-light: #d6aa6e;
+	--board-teak-base: #c49154;
+	--board-teak-frame: #633c20;
+	--board-grid-line: #744a26;
+	--board-sit-ke-myin: #9b3b1e;
+	--piece-red-fill: #b5231d;
+	--piece-red-accent: #f6d782;
+	--piece-black-fill: #211c18;
+	--piece-black-accent: #f6ede0;
+
+	/* Game highlights & clock alerts */
+	--highlight-last-move: rgba(212, 146, 38, 0.32);
+	--highlight-check: #b91c1c;
+	--highlight-legal: rgba(35, 23, 16, 0.36);
+	--highlight-promote: #b45309;
+	--clock-low: #b45309;
+	--clock-critical: #b91c1c;
+
+	/* shadcn/ui semantic mapping */
+	--background: var(--bg-table);
+	--foreground: var(--text-primary);
+	--card: var(--bg-surface);
+	--card-foreground: var(--text-primary);
+	--popover: var(--bg-surface);
+	--popover-foreground: var(--text-primary);
+	--primary: var(--piece-red-fill);
+	--primary-foreground: #fdf6ec;
+	--secondary: var(--bg-surface-elevated);
+	--secondary-foreground: var(--text-primary);
+	--muted: var(--bg-surface-elevated);
+	--muted-foreground: var(--text-muted);
+	--accent: var(--bg-surface-elevated);
+	--accent-foreground: #8f2a13;
+	--destructive: #b91c1c;
+	--destructive-foreground: #fef2f2;
+	--border: var(--border-subtle);
+	--input: var(--border-subtle);
+	--ring: var(--highlight-promote);
+	--radius: 0.75rem;
 }
 
-body {
-	margin: 0;
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--color-table: var(--bg-table);
+	--color-surface: var(--bg-surface);
+	--color-surface-elevated: var(--bg-surface-elevated);
+	--color-border-subtle: var(--border-subtle);
+	--color-text-primary: var(--text-primary);
+	--color-text-muted: var(--text-muted);
+	--color-teak-light: var(--board-teak-light);
+	--color-teak-base: var(--board-teak-base);
+	--color-teak-frame: var(--board-teak-frame);
+	--color-teak-grid: var(--board-grid-line);
+	--color-sit-ke-myin: var(--board-sit-ke-myin);
+	--color-piece-red: var(--piece-red-fill);
+	--color-piece-red-accent: var(--piece-red-accent);
+	--color-piece-black: var(--piece-black-fill);
+	--color-piece-black-accent: var(--piece-black-accent);
+	--color-clock-low: var(--clock-low);
+	--color-clock-critical: var(--clock-critical);
+
+	--font-sans:
+		"Plus Jakarta Sans", "Noto Sans Myanmar", "Myanmar Text", "Pyidaungsu",
+		system-ui, -apple-system, sans-serif;
+	--font-myanmar:
+		"Noto Sans Myanmar", "Myanmar Text", "Pyidaungsu", "Plus Jakarta Sans",
+		system-ui, sans-serif;
+
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+	* {
+		box-sizing: border-box;
+		border-color: var(--border);
+	}
+
+	html,
+	body {
+		min-height: 100%;
+		margin: 0;
+		background-color: var(--bg-table);
+		color: var(--text-primary);
+		font-family: var(--font-sans);
+		overflow-x: clip;
+	}
+
+	html[lang="my"] body {
+		font-family: var(--font-myanmar);
+		line-height: 1.65;
+	}
+}
+
+.myanmar-text {
+	font-family: var(--font-myanmar);
+	line-height: 1.65;
+}
+
+@keyframes sittuyin-square-shake {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	20% {
+		transform: translate3d(-4px, 0, 0);
+	}
+	40% {
+		transform: translate3d(4px, 0, 0);
+	}
+	60% {
+		transform: translate3d(-3px, 0, 0);
+	}
+	80% {
+		transform: translate3d(3px, 0, 0);
+	}
+}
+
+@keyframes sittuyin-check-pulse {
+	0%,
+	100% {
+		opacity: 0.92;
+	}
+	50% {
+		opacity: 0.48;
+	}
+}
+
+.sittuyin-shake {
+	animation: sittuyin-square-shake 280ms ease-in-out;
+}
+
+.sittuyin-check-pulse {
+	animation: sittuyin-check-pulse 1.5s ease-in-out infinite;
+}
+
+.sittuyin-live-pill-pulse {
+	animation: sittuyin-check-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sittuyin-shake,
+	.sittuyin-check-pulse,
+	.sittuyin-live-pill-pulse {
+		animation: none;
+	}
 }
