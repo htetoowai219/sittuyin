@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="assets/logo.svg" alt="Sittuyin Royal King Emblem" height="64" />
   <h1>Sittuyin (မြန်မာ့ စစ်တုရင်)</h1>
   <p>Traditional Myanmar chess on the web with an uncheckered teak SVG board, hidden simultaneous setup, and bilingual Myanmar/English play.</p>
   <p>
@@ -6,6 +7,7 @@
     <img src="https://img.shields.io/badge/pnpm-12.15-informational?style=flat-square" alt="pnpm 12.15" />
     <img src="https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square" alt="TypeScript" />
   </p>
+  <img src="docs/images/preview.png" alt="Sittuyin teak board and match workspace preview" width="100%" />
 </div>
 
 ## Quick Start
