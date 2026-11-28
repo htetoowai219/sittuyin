@@ -6,6 +6,7 @@ import {
 	type Side,
 	type Viewer,
 } from "@sittuyin/engine";
+import type { RoomActionErrorCode } from "@sittuyin/shared";
 import * as m from "@/paraglide/messages.js";
 import { getLocale, setLocale } from "@/paraglide/runtime.js";
 
@@ -81,7 +82,7 @@ export function formatPieceName(role: PieceRole, locale: AppLocale): string {
 }
 
 export function formatEngineError(
-	code: EngineErrorCode | "GENERIC",
+	code: EngineErrorCode | RoomActionErrorCode | "GENERIC",
 	locale: AppLocale,
 ): string {
 	switch (code) {
@@ -125,6 +126,22 @@ export function formatEngineError(
 			return m.err_OPPONENT_IN_CHECK({}, { locale });
 		case "REPLAY_MOVE_FAILED":
 			return m.err_REPLAY_MOVE_FAILED({}, { locale });
+		case "FORBIDDEN_SPECTATOR":
+			return m.err_FORBIDDEN_SPECTATOR({}, { locale });
+		case "DRAW_ALREADY_PENDING":
+			return m.err_DRAW_ALREADY_PENDING({}, { locale });
+		case "DRAW_COOLDOWN_ACTIVE":
+			return m.err_DRAW_COOLDOWN_ACTIVE({}, { locale });
+		case "NO_DRAW_OFFER_PENDING":
+			return m.err_NO_DRAW_OFFER_PENDING({}, { locale });
+		case "ABORT_WINDOW_CLOSED":
+			return m.err_ABORT_WINDOW_CLOSED({}, { locale });
+		case "OPPONENT_DISCONNECTED":
+			return m.err_OPPONENT_DISCONNECTED({}, { locale });
+		case "NO_REMATCH_PENDING":
+			return m.err_NO_REMATCH_PENDING({}, { locale });
+		case "SERVER_MAINTENANCE":
+			return m.err_SERVER_MAINTENANCE({}, { locale });
 		default:
 			return m.err_GENERIC({}, { locale });
 	}

@@ -12,6 +12,18 @@
 	"scripts": {
 		"build": "tsc -p tsconfig.build.json",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run --passWithNoTests"
+		"test": "vitest run --passWithNoTests",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate"
+	},
+	"dependencies": {
+		"@neondatabase/serverless": "^1.2.1",
+		"@sittuyin/shared": "workspace:*",
+		"drizzle-orm": "^0.45.4",
+		"pg": "^8.23.1"
+	},
+	"devDependencies": {
+		"@types/pg": "^8.23.1",
+		"drizzle-kit": "^0.31.11"
 	}
 }

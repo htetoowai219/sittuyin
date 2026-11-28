@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795439174743,
+      "tag": "0000_military_prowler",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795497092502,
+      "tag": "0001_auth_profiles_ratings",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795856045821,
+      "tag": "0002_profiles_leaderboard_history_indexes",
+      "breakpoints": true
+    }
+  ]
+}

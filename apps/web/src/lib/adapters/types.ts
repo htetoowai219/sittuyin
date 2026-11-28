@@ -8,7 +8,13 @@ import type {
 	SetupAction,
 	Side,
 } from "@sittuyin/engine";
-import type { TimeControl } from "@sittuyin/shared";
+import type {
+	CanonicalRoomMode,
+	PreferredSide,
+	RatingUpdatedEvent,
+	RoomPhase,
+	TimeControl,
+} from "@sittuyin/shared";
 
 export type MatchAdapterMode =
 	| "local_pass_and_play"
@@ -27,13 +33,39 @@ export type ExtendedOutcome =
 	| {
 			readonly status: "win";
 			readonly winner: Side;
-			readonly reason: "resignation" | "timeout";
+			readonly reason: "resignation" | "timeout" | "abandonment";
 	  }
 	| {
 			readonly status: "draw";
 			readonly winner: null;
-			readonly reason: "agreed";
+			readonly reason: "agreed" | "agreed_draw";
+	  }
+	| {
+			readonly status: "aborted";
+			readonly winner: null;
+			readonly reason: "aborted_pre_move" | "aborted_maintenance";
 	  };
+
+export interface OnlineRoomLifecycleState {
+	readonly roomId: string;
+	readonly matchId: string;
+	readonly roomMode: CanonicalRoomMode;
+	readonly isRated?: boolean;
+	readonly roomTitle: string;
+	readonly inviteCode: string | null;
+	readonly hostPreferredSide: PreferredSide;
+	readonly timeControl: TimeControl;
+	readonly roomPhase: RoomPhase;
+	readonly spectatorCount: number;
+	readonly setupRemainingMs: number | null;
+	readonly setupSyncedAtMs: number | null;
+	readonly drawOfferedBy: Side | null;
+	readonly rematchOfferedBy: Side | null;
+	readonly rematchAcceptedByMe: boolean;
+	readonly canAbort: boolean;
+	readonly maintenanceWarning: string | null;
+	readonly ratingUpdate?: RatingUpdatedEvent | null;
+}
 
 export interface MatchClockState {
 	readonly enabled: boolean;
@@ -49,6 +81,7 @@ export interface MatchPlayerHud {
 	readonly side: Side;
 	readonly displayName: string;
 	readonly rating: number | null;
+	readonly isProvisional?: boolean;
 	readonly connected: boolean;
 	readonly isLocal: boolean;
 }
@@ -63,6 +96,7 @@ export interface MatchAdapter {
 	readonly connectionStatus: MatchConnectionStatus;
 	readonly isInteractive: boolean;
 	readonly outcome: ExtendedOutcome | null;
+	readonly online?: OnlineRoomLifecycleState;
 	readonly dispatchSetup: (
 		action: SetupAction,
 	) => Result<void, EngineError> | Promise<Result<void, EngineError>>;
@@ -76,6 +110,11 @@ export interface MatchAdapter {
 	readonly requestDraw: () => void;
 	readonly confirmHandoff: () => void;
 	readonly switchSandboxViewer?: (side: Side) => void;
+	readonly offerRematch?: () => void;
+	readonly respondDraw?: (accept: boolean) => void;
+	readonly respondRematch?: (accept: boolean) => void;
+	readonly abortMatch?: () => void;
+	readonly leaveRoom?: () => void;
 }
 
 export interface TimeControlConfig {

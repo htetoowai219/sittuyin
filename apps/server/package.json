@@ -17,10 +17,14 @@
 	"dependencies": {
 		"@colyseus/schema": "^5.0.50",
 		"@colyseus/tools": "^0.18.11",
+		"@sentry/node": "^11.16.0",
+		"@sittuyin/db": "workspace:*",
 		"@sittuyin/engine": "workspace:*",
 		"@sittuyin/shared": "workspace:*",
 		"colyseus": "^0.18.12",
-		"express": "^5.2.1"
+		"express": "^5.2.1",
+		"jose": "^6.2.18",
+		"pino": "^10.4.0"
 	},
 	"devDependencies": {
 		"@colyseus/sdk": "^0.18.10",

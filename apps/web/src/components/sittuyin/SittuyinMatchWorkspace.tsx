@@ -19,11 +19,13 @@ import {
 } from "@sittuyin/engine";
 import {
 	Copy,
+	ExternalLink,
 	Flag,
 	Handshake,
 	Moon,
 	RefreshCw,
 	RotateCw,
+	Share2,
 	Sun,
 	Trophy,
 	Volume2,
@@ -60,17 +62,24 @@ import {
 import { useBoardPreferencesStore } from "@/stores/board-preferences";
 import { BoardPreferencesDialog } from "./BoardPreferencesDialog";
 import { MoveHistoryPanel } from "./MoveHistoryPanel";
+import {
+	OnlineMatchActionBar,
+	OnlineStatusHeader,
+} from "./OnlineMatchControls";
 import { PlayerHudBar } from "./PlayerHudBar";
 import type { PendingPromotionState } from "./PromotionOverlay";
 import { type AutoPlaySpeed, ReplayScrubberBar } from "./ReplayScrubberBar";
 import { SetupHandoffCurtain, SetupTray } from "./SetupTray";
 import { type BoardDragGhost, SittuyinBoard } from "./SittuyinBoard";
+import { WaitingRoomOverlay } from "./WaitingRoomOverlay";
 
 export interface SittuyinMatchWorkspaceProps {
 	readonly adapter: MatchAdapter;
 	readonly locale: AppLocale;
 	readonly initialReplayPly?: number;
+	readonly onReplayPlyChange?: (ply: number) => void;
 	readonly onNewMatch?: () => void;
+	readonly onLeaveOnlineRoom?: () => void;
 	readonly topToolbar?: ReactNode;
 	readonly railHeaderExtra?: ReactNode;
 }
@@ -88,10 +97,21 @@ function formatOutcomeBanner(
 				return m.outcome_win_resign({ winner }, { locale });
 			case "timeout":
 				return m.outcome_win_timeout({ winner }, { locale });
+			case "abandonment":
+				return m.outcome_win_abandonment({ winner }, { locale });
+		}
+	}
+	if (outcome.status === "aborted") {
+		switch (outcome.reason) {
+			case "aborted_maintenance":
+				return m.outcome_aborted_maintenance({}, { locale });
+			case "aborted_pre_move":
+				return m.outcome_aborted_pre_move({}, { locale });
 		}
 	}
 	switch (outcome.reason) {
 		case "agreed":
+		case "agreed_draw":
 			return m.outcome_draw_agreed({}, { locale });
 		case "stalemate":
 			return m.outcome_draw_stalemate({}, { locale });
@@ -124,7 +144,9 @@ export function SittuyinMatchWorkspace({
 	adapter,
 	locale,
 	initialReplayPly,
+	onReplayPlyChange,
 	onNewMatch,
+	onLeaveOnlineRoom,
 	topToolbar,
 	railHeaderExtra,
 }: SittuyinMatchWorkspaceProps) {
@@ -320,6 +342,12 @@ export function SittuyinMatchWorkspace({
 		replayCursor === null
 			? totalPlies
 			: Math.max(0, Math.min(replayCursor, totalPlies));
+
+	useEffect(() => {
+		if (adapter.mode === "replay") {
+			onReplayPlyChange?.(activePly);
+		}
+	}, [adapter.mode, activePly, onReplayPlyChange]);
 
 	const isScrubbingLiveMatch =
 		adapter.mode !== "replay" && replayCursor !== null;
@@ -933,6 +961,17 @@ export function SittuyinMatchWorkspace({
 								}}
 							/>
 						) : null}
+
+						{adapter.online?.roomPhase === "waiting" ? (
+							<WaitingRoomOverlay
+								online={adapter.online}
+								locale={locale}
+								onAbortRoom={() => {
+									adapter.abortMatch?.();
+									onLeaveOnlineRoom?.();
+								}}
+							/>
+						) : null}
 					</div>
 
 					<PlayerHudBar
@@ -1003,6 +1042,14 @@ export function SittuyinMatchWorkspace({
 				<aside className="flex w-full flex-col gap-3 lg:w-[360px] lg:shrink-0">
 					{railHeaderExtra}
 
+					{adapter.online ? (
+						<OnlineStatusHeader
+							adapter={adapter}
+							online={adapter.online}
+							locale={locale}
+						/>
+					) : null}
+
 					{/* Match Outcome Banner */}
 					{adapter.outcome !== null ? (
 						<Alert
@@ -1013,40 +1060,100 @@ export function SittuyinMatchWorkspace({
 							<AlertTitle className="text-sm font-semibold">
 								{m.phase_finished({}, { locale })}
 							</AlertTitle>
-							<AlertDescription className="text-xs text-foreground">
-								{formatOutcomeBanner(adapter.outcome, locale)}
+							<AlertDescription className="flex flex-col gap-2.5 text-xs text-foreground">
+								<span>{formatOutcomeBanner(adapter.outcome, locale)}</span>
+								{adapter.mode === "online" &&
+								adapter.online?.matchId &&
+								adapter.online.matchId.trim().length > 0 &&
+								adapter.outcome.reason !== "aborted_pre_move" &&
+								adapter.outcome.reason !== "aborted_maintenance" ? (
+									<div className="flex flex-wrap items-center gap-2 pt-0.5">
+										<Button
+											type="button"
+											variant="secondary"
+											size="xs"
+											data-testid="share-replay-btn"
+											onClick={() => {
+												const matchId = adapter.online?.matchId;
+												if (!matchId) return;
+												const path = `/${locale}/match/${matchId}`;
+												const fullUrl =
+													typeof window !== "undefined"
+														? `${window.location.origin}${path}`
+														: path;
+												void navigator.clipboard
+													?.writeText(fullUrl)
+													.then(() => {
+														toast.success(
+															m.match_replay_link_copied({}, { locale }),
+														);
+													})
+													.catch(() => {
+														toast.info(fullUrl);
+													});
+											}}
+										>
+											<Share2 data-icon="inline-start" />
+											{m.match_replay_share_btn({}, { locale })}
+										</Button>
+										<Button
+											asChild
+											variant="outline"
+											size="xs"
+											data-testid="open-replay-link"
+										>
+											<a href={`/${locale}/match/${adapter.online.matchId}`}>
+												<ExternalLink data-icon="inline-start" />
+												{m.match_replay_open_btn({}, { locale })}
+											</a>
+										</Button>
+									</div>
+								) : null}
 							</AlertDescription>
 						</Alert>
 					) : null}
 
 					{/* Context-sensitive rail: Setup Tray during setup vs History & Scrubber during play/replay */}
-					{adapter.view.phase === "setup" && adapter.mode !== "replay" ? (
-						<SetupTray
-							view={adapter.view}
-							locale={locale}
-							flipped={flipped}
-							showScript={pieceScriptOverlay}
-							selectedHandRole={selectedHandRole}
-							isSandbox={adapter.mode === "local_sandbox"}
-							boardContainerRef={boardContainerRef}
-							onSelectHandRole={(role) => {
-								setSelectedSquare(null);
-								setSelectedHandRole(role);
-							}}
-							onDispatchSetup={(action) => {
-								void runSetupAction(action);
-							}}
-							onApplyRandomSetup={() => {
-								void handleApplyRandomSetup();
-							}}
-							onSwitchSandboxViewer={adapter.switchSandboxViewer}
-							onHandDragChange={(ghost, hover, role) => {
-								setExternalDragGhost(ghost);
-								setExternalHoverSquare(hover);
-								setDraggingHandRole(role);
-							}}
-							onHandDropOnBoard={handleHandDropOnBoard}
-						/>
+					{adapter.view.phase === "setup" &&
+					adapter.mode !== "replay" &&
+					adapter.online?.roomPhase !== "waiting" ? (
+						<div className="flex flex-col gap-3">
+							<SetupTray
+								view={adapter.view}
+								locale={locale}
+								flipped={flipped}
+								showScript={pieceScriptOverlay}
+								selectedHandRole={selectedHandRole}
+								isSandbox={adapter.mode === "local_sandbox"}
+								setupRemainingMs={adapter.online?.setupRemainingMs}
+								boardContainerRef={boardContainerRef}
+								onSelectHandRole={(role) => {
+									setSelectedSquare(null);
+									setSelectedHandRole(role);
+								}}
+								onDispatchSetup={(action) => {
+									void runSetupAction(action);
+								}}
+								onApplyRandomSetup={() => {
+									void handleApplyRandomSetup();
+								}}
+								onSwitchSandboxViewer={adapter.switchSandboxViewer}
+								onHandDragChange={(ghost, hover, role) => {
+									setExternalDragGhost(ghost);
+									setExternalHoverSquare(hover);
+									setDraggingHandRole(role);
+								}}
+								onHandDropOnBoard={handleHandDropOnBoard}
+							/>
+							{adapter.online ? (
+								<OnlineMatchActionBar
+									adapter={adapter}
+									online={adapter.online}
+									locale={locale}
+									onLeaveToLobby={onLeaveOnlineRoom}
+								/>
+							) : null}
+						</div>
 					) : (
 						<Card className="border-border-subtle bg-card">
 							<CardHeader className="gap-2 pb-3">
@@ -1101,9 +1208,16 @@ export function SittuyinMatchWorkspace({
 
 								{/* Match controls & copy buttons */}
 								<div className="flex flex-wrap items-center gap-2">
-									{adapter.mode !== "replay" &&
-									adapter.view.phase === "playing" &&
-									adapter.outcome === null ? (
+									{adapter.online ? (
+										<OnlineMatchActionBar
+											adapter={adapter}
+											online={adapter.online}
+											locale={locale}
+											onLeaveToLobby={onLeaveOnlineRoom}
+										/>
+									) : adapter.mode !== "replay" &&
+										adapter.view.phase === "playing" &&
+										adapter.outcome === null ? (
 										<>
 											<Button
 												type="button"

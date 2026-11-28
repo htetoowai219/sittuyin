@@ -17,6 +17,7 @@ import {
 import {
 	BookOpen,
 	CheckCircle2,
+	Clock,
 	Eye,
 	Lock,
 	Shuffle,
@@ -173,6 +174,7 @@ export interface SetupTrayProps {
 	readonly showScript: boolean;
 	readonly selectedHandRole: OfficerRole | null;
 	readonly isSandbox: boolean;
+	readonly setupRemainingMs?: number | null;
 	readonly boardContainerRef: RefObject<HTMLDivElement | null>;
 	readonly onSelectHandRole: (role: OfficerRole | null) => void;
 	readonly onDispatchSetup: (action: SetupAction) => void;
@@ -193,6 +195,7 @@ export function SetupTray({
 	showScript,
 	selectedHandRole,
 	isSandbox,
+	setupRemainingMs,
 	boardContainerRef,
 	onSelectHandRole,
 	onDispatchSetup,
@@ -362,30 +365,113 @@ export function SetupTray({
 		</div>
 	);
 
+	const setupCountdownSeconds =
+		typeof setupRemainingMs === "number"
+			? Math.max(0, Math.ceil(setupRemainingMs / 1000))
+			: null;
+	const isSetupTimeWarning =
+		typeof setupRemainingMs === "number" && setupRemainingMs <= 15_000;
+
+	if (view.viewer === "spectator") {
+		return (
+			<Card
+				data-testid="spectator-setup-tray"
+				className="border-border-subtle bg-card"
+			>
+				<CardHeader className="gap-2 pb-3">
+					<div className="flex flex-wrap items-center justify-between gap-2">
+						<CardTitle className="text-base font-semibold">
+							{m.online_spectator_setup_title({}, { locale })}
+						</CardTitle>
+						{setupCountdownSeconds !== null ? (
+							<Badge
+								variant={isSetupTimeWarning ? "destructive" : "secondary"}
+								data-testid="setup-countdown-badge"
+								className="tabular-nums"
+							>
+								<Clock className="size-3" />
+								{m.online_setup_countdown(
+									{ seconds: String(setupCountdownSeconds) },
+									{ locale },
+								)}
+							</Badge>
+						) : null}
+					</div>
+					<CardDescription className="text-xs">
+						{m.online_spectator_setup_desc({}, { locale })}
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="flex flex-col gap-2.5">
+					{(["red", "black"] as const).map((side) => {
+						const sideReady = view.setupReady[side];
+						const sidePlaced = view.placedCounts[side];
+						return (
+							<div
+								key={side}
+								data-testid={`spectator-${side}-setup-progress`}
+								className="flex items-center justify-between rounded-xl border border-border-subtle bg-surface-elevated/60 px-3 py-2"
+							>
+								<span className="text-sm font-medium text-foreground">
+									{formatSideName(side, locale)}
+								</span>
+								<Badge
+									variant={sideReady ? "default" : "secondary"}
+									className="tabular-nums"
+								>
+									{sideReady
+										? m.setup_opponent_ready({}, { locale })
+										: m.setup_opponent_placing(
+												{ count: String(sidePlaced) },
+												{ locale },
+											)}
+								</Badge>
+							</div>
+						);
+					})}
+				</CardContent>
+			</Card>
+		);
+	}
+
 	return (
 		<Card className="border-border-subtle bg-card">
 			<CardHeader className="gap-2 pb-3">
-				<div className="flex items-center justify-between gap-2">
+				<div className="flex flex-wrap items-center justify-between gap-2">
 					<CardTitle className="text-base font-semibold">
 						{m.setup_title({}, { locale })}
 					</CardTitle>
-					<Badge
-						variant={opponentReady ? "default" : "secondary"}
-						data-testid="opponent-setup-progress"
-						className="tabular-nums"
-					>
-						{m.setup_opponent_progress(
-							{ side: formatSideName(opponent, locale) },
-							{ locale },
-						)}
-						:{" "}
-						{opponentReady
-							? m.setup_opponent_ready({}, { locale })
-							: m.setup_opponent_placing(
-									{ count: String(opponentPlaced) },
+					<div className="flex flex-wrap items-center gap-1.5">
+						{setupCountdownSeconds !== null ? (
+							<Badge
+								variant={isSetupTimeWarning ? "destructive" : "outline"}
+								data-testid="setup-countdown-badge"
+								className="tabular-nums"
+							>
+								<Clock className="size-3" />
+								{m.online_setup_countdown(
+									{ seconds: String(setupCountdownSeconds) },
 									{ locale },
 								)}
-					</Badge>
+							</Badge>
+						) : null}
+						<Badge
+							variant={opponentReady ? "default" : "secondary"}
+							data-testid="opponent-setup-progress"
+							className="tabular-nums"
+						>
+							{m.setup_opponent_progress(
+								{ side: formatSideName(opponent, locale) },
+								{ locale },
+							)}
+							:{" "}
+							{opponentReady
+								? m.setup_opponent_ready({}, { locale })
+								: m.setup_opponent_placing(
+										{ count: String(opponentPlaced) },
+										{ locale },
+									)}
+						</Badge>
+					</div>
 				</div>
 				<CardDescription className="text-xs">
 					{m.setup_subtitle({}, { locale })}

@@ -13,10 +13,12 @@
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 22+ (see `.nvmrc`)
 - pnpm 12 (`corepack enable` or install `pnpm@12.15.0`)
 
 ### Run Locally
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/htetoowai219/sittuyin.git
@@ -81,15 +83,15 @@ pnpm build      # Build packages, web client, and Cloudflare Workers SSR bundle
 
 Local play and replay in `apps/web` need no environment variables. Copy `.env.example` to `.env` when working on the server or upcoming auth/database integrations:
 
-| Variable | Default / Notes | Purpose |
-|---|---|---|
-| `PORT` | `2567` | Colyseus game server listen port (`apps/server`) |
-| `ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated CORS origins for `apps/server` |
-| `VITE_GAME_SERVER_URL` | `http://localhost:2567` | Game server URL read by `apps/web` |
-| `MONITOR_AUTH_SECRET` | Optional | Basic auth password for `/monitor` in production |
-| `DATABASE_URL` / `DATABASE_URL_UNPOOLED` | Upcoming | Neon PostgreSQL connection strings |
-| `BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` / `GOOGLE_CLIENT_*` | Upcoming | Better Auth session and OAuth config |
-| `MATCH_TICKET_SECRET` | Upcoming | Shared HS256 JWT secret (min 32 bytes) for room join tickets |
-| `SENTRY_DSN` / `VITE_SENTRY_DSN` / `SENTRY_AUTH_TOKEN` | Optional | Error reporting when Sentry is wired |
+| Variable                                                     | Default / Notes         | Purpose                                                      |
+| ------------------------------------------------------------ | ----------------------- | ------------------------------------------------------------ |
+| `PORT`                                                       | `2567`                  | Colyseus game server listen port (`apps/server`)             |
+| `ALLOWED_ORIGINS`                                            | `http://localhost:3000` | Comma-separated CORS origins for `apps/server`               |
+| `VITE_GAME_SERVER_URL`                                       | `http://localhost:2567` | Game server URL read by `apps/web`                           |
+| `MONITOR_AUTH_SECRET`                                        | Optional                | Basic auth password for `/monitor` in production             |
+| `DATABASE_URL` / `DATABASE_URL_UNPOOLED`                     | Upcoming                | Neon PostgreSQL connection strings                           |
+| `BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` / `GOOGLE_CLIENT_*` | Upcoming                | Better Auth session and OAuth config                         |
+| `MATCH_TICKET_SECRET`                                        | Upcoming                | Shared HS256 JWT secret (min 32 bytes) for room join tickets |
+| `SENTRY_DSN` / `VITE_SENTRY_DSN` / `SENTRY_AUTH_TOKEN`       | Optional                | Error reporting when Sentry is wired                         |
 
 </details>

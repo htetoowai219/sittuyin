@@ -1,0 +1,165 @@
+{
+	"id": "8f868819-c023-4f9c-bc8f-53fe4155c998",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.matches": {
+			"name": "matches",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"room_id": {
+					"name": "room_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"mode": {
+					"name": "mode",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"time_control": {
+					"name": "time_control",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"red_user_id": {
+					"name": "red_user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"black_user_id": {
+					"name": "black_user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"red_display_name": {
+					"name": "red_display_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"black_display_name": {
+					"name": "black_display_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"winner_side": {
+					"name": "winner_side",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"termination_reason": {
+					"name": "termination_reason",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"initial_setup_fen": {
+					"name": "initial_setup_fen",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"moves_uci_json": {
+					"name": "moves_uci_json",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"total_plies": {
+					"name": "total_plies",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"started_at": {
+					"name": "started_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ended_at": {
+					"name": "ended_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {
+				"matches_red_user_ended_idx": {
+					"name": "matches_red_user_ended_idx",
+					"columns": [
+						{
+							"expression": "red_user_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "ended_at",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"matches_black_user_ended_idx": {
+					"name": "matches_black_user_ended_idx",
+					"columns": [
+						{
+							"expression": "black_user_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "ended_at",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

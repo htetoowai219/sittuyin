@@ -6,7 +6,7 @@ import {
 	toPlayerView,
 } from "@sittuyin/engine";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, Crown, Layers, Play, Sparkles } from "lucide-react";
+import { BookOpen, Crown, Layers, Play, Sparkles, Swords } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { SittuyinBoard } from "@/components/sittuyin/SittuyinBoard";
 import { SittuyinPieceSvg } from "@/components/sittuyin/SittuyinPieceSvg";
@@ -84,6 +84,17 @@ function LandingHub() {
 
 					<div className="flex flex-wrap items-center gap-3 pt-1">
 						<Button asChild size="lg">
+							<Link
+								to="/$locale/online"
+								params={{ locale: activeLocale }}
+								data-testid="landing-cta-online"
+							>
+								<Swords data-icon="inline-start" />
+								{m.landing_cta_online({}, { locale: activeLocale })}
+							</Link>
+						</Button>
+
+						<Button asChild variant="secondary" size="lg">
 							<Link to="/$locale/play" params={{ locale: activeLocale }}>
 								<Play data-icon="inline-start" />
 								{m.landing_cta_play({}, { locale: activeLocale })}

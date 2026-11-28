@@ -9,7 +9,12 @@ import {
 	toPlayerView,
 } from "@sittuyin/engine";
 import { type AppLocale, formatSideName } from "@/i18n/locale";
-import type { MatchAdapter, MatchPlayerHud, ReplaySessionState } from "./types";
+import type {
+	ExtendedOutcome,
+	MatchAdapter,
+	MatchPlayerHud,
+	ReplaySessionState,
+} from "./types";
 
 export const MAX_REPLAY_FEN_LENGTH = 1024;
 export const MAX_REPLAY_UCI_MOVES = 1000;
@@ -125,9 +130,68 @@ const READONLY_ERROR: EngineError = {
 	message: "Replay viewer is read-only.",
 };
 
+export interface CreateReplayAdapterOptions {
+	readonly players?: Readonly<Record<Side, MatchPlayerHud>>;
+	readonly outcomeOverride?: ExtendedOutcome | null;
+}
+
+export function matchReplayToExtendedOutcome(
+	winnerSide: Side | null,
+	terminationReason: string,
+): ExtendedOutcome | null {
+	if (winnerSide !== null) {
+		const reason =
+			terminationReason === "resign" || terminationReason === "resignation"
+				? "resignation"
+				: terminationReason === "timeout"
+					? "timeout"
+					: terminationReason === "abandonment"
+						? "abandonment"
+						: "checkmate";
+		return {
+			status: "win",
+			winner: winnerSide,
+			reason,
+		};
+	}
+	if (terminationReason === "aborted_pre_move") {
+		return { status: "aborted", winner: null, reason: "aborted_pre_move" };
+	}
+	if (terminationReason === "aborted_maintenance") {
+		return { status: "aborted", winner: null, reason: "aborted_maintenance" };
+	}
+	if (terminationReason === "stalemate") {
+		return { status: "draw", winner: null, reason: "stalemate" };
+	}
+	if (
+		terminationReason === "repetition" ||
+		terminationReason === "threefold_repetition"
+	) {
+		return { status: "draw", winner: null, reason: "threefold_repetition" };
+	}
+	if (
+		terminationReason === "fifty_move" ||
+		terminationReason === "fifty_move_rule"
+	) {
+		return { status: "draw", winner: null, reason: "fifty_move_rule" };
+	}
+	if (terminationReason === "insufficient_material") {
+		return { status: "draw", winner: null, reason: "insufficient_material" };
+	}
+	if (
+		terminationReason === "draw_agreement" ||
+		terminationReason === "agreed_draw" ||
+		terminationReason === "agreed"
+	) {
+		return { status: "draw", winner: null, reason: "agreed_draw" };
+	}
+	return null;
+}
+
 export function createReplayAdapter(
 	session: ReplaySessionState,
 	locale: AppLocale,
+	options?: CreateReplayAdapterOptions,
 ): MatchAdapter {
 	const fallbackState = createGame();
 	const snapshots =
@@ -135,7 +199,7 @@ export function createReplayAdapter(
 	const headState = snapshots[snapshots.length - 1] ?? fallbackState;
 	const view = toPlayerView(headState, "spectator");
 
-	const players: Readonly<Record<Side, MatchPlayerHud>> = {
+	const players: Readonly<Record<Side, MatchPlayerHud>> = options?.players ?? {
 		red: {
 			side: "red",
 			displayName: formatSideName("red", locale),
@@ -161,7 +225,10 @@ export function createReplayAdapter(
 		pendingRevealHandoff: null,
 		connectionStatus: "local",
 		isInteractive: false,
-		outcome: headState.outcome,
+		outcome:
+			options?.outcomeOverride !== undefined
+				? options.outcomeOverride
+				: headState.outcome,
 		dispatchSetup: () => ({ ok: false, error: READONLY_ERROR }),
 		dispatchMove: () => ({ ok: false, error: READONLY_ERROR }),
 		applyRandomSetup: () => ({ ok: false, error: READONLY_ERROR }),

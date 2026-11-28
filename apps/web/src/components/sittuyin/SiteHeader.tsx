@@ -1,5 +1,13 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Globe, Moon, Play, RotateCcw, Sun } from "lucide-react";
+import {
+	Globe,
+	Moon,
+	Play,
+	RotateCcw,
+	Sun,
+	Swords,
+	Trophy,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	type AppLocale,
@@ -8,6 +16,7 @@ import {
 	setLocaleCookie,
 } from "@/i18n/locale";
 import { useBoardPreferencesStore } from "@/stores/board-preferences";
+import { AccountMenu } from "./AccountMenu";
 import { SittuyinPieceSvg } from "./SittuyinPieceSvg";
 
 export interface SiteHeaderProps {
@@ -31,8 +40,16 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
 	};
 
 	const isPlay = location.pathname.includes("/play");
-	const isReplay = location.pathname.includes("/replay");
-	const isHome = !isPlay && !isReplay;
+	const isOnline =
+		location.pathname.includes("/online") ||
+		location.pathname.includes("/room/");
+	const isLeaderboard = location.pathname.includes("/leaderboard");
+	const isReplay =
+		location.pathname.includes("/replay") ||
+		location.pathname.includes("/match/");
+	const isProfile = location.pathname.includes("/u/");
+	const isHome =
+		!isPlay && !isOnline && !isLeaderboard && !isReplay && !isProfile;
 
 	return (
 		<header className="sticky top-0 z-20 border-b border-border-subtle/80 bg-surface/92 backdrop-blur-md">
@@ -74,6 +91,26 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
 					</Button>
 					<Button
 						asChild
+						variant={isOnline ? "default" : "ghost"}
+						size="sm"
+						className="h-8 gap-1 px-2 sm:h-9 sm:px-3"
+					>
+						<Link
+							to="/$locale/online"
+							params={{ locale }}
+							data-testid="nav-online-link"
+						>
+							<Swords
+								data-icon="inline-start"
+								className="hidden min-[380px]:inline"
+							/>
+							<span className="text-xs sm:text-sm">
+								{m.nav_online({}, { locale })}
+							</span>
+						</Link>
+					</Button>
+					<Button
+						asChild
 						variant={isPlay ? "default" : "ghost"}
 						size="sm"
 						className="h-8 gap-1 px-2 sm:h-9 sm:px-3"
@@ -85,6 +122,26 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
 							/>
 							<span className="text-xs sm:text-sm">
 								{m.nav_play({}, { locale })}
+							</span>
+						</Link>
+					</Button>
+					<Button
+						asChild
+						variant={isLeaderboard ? "secondary" : "ghost"}
+						size="sm"
+						className="h-8 gap-1 px-2 sm:h-9 sm:px-3"
+					>
+						<Link
+							to="/$locale/leaderboard"
+							params={{ locale }}
+							data-testid="nav-leaderboard-link"
+						>
+							<Trophy
+								data-icon="inline-start"
+								className="hidden min-[380px]:inline"
+							/>
+							<span className="text-xs sm:text-sm">
+								{m.nav_leaderboard({}, { locale })}
 							</span>
 						</Link>
 					</Button>
@@ -137,6 +194,8 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
 							{m.nav_locale_switch({}, { locale })}
 						</span>
 					</Button>
+
+					<AccountMenu locale={locale} />
 				</nav>
 			</div>
 		</header>
